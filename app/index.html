@@ -1,0 +1,58 @@
+
+<html lang="en" ng-app="StarterApp">
+<head>
+<link href="styles/index.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet"
+	href="../bower_components/angular-material/angular-material.min.css">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <link rel="stylesheet" href="../bower_components/ngDialog/css/ngDialog.css">
+  <link rel="stylesheet" href="../bower_components/ngDialog/css/ngDialog-theme-default.css">
+  <link rel="stylesheet" href="../bower_components/ngDialog/css/ngDialog-theme-plain.css">
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script
+	src="../bower_components/angular/angular.min.js"></script>
+<script
+	src="../bower_components/angular-animate/angular-animate.min.js"></script>
+<script
+	src="../bower_components/angular-aria/angular-aria.min.js"></script>
+<script
+	src="../bower_components/angular-material/angular-material.min.js"></script>
+<script src="../bower_components/angular-route/angular-route.min.js"></script>
+
+<script src="scripts/index.js"></script>
+<script src="scripts/map.js"></script>
+<script src="scripts/maps-list.js"></script>
+<script src="scripts/date.js"></script>
+<script src="../bower_components/ngDialog/js/ngDialog.js"></script>
+<script src="../bower_components/ng-file-upload/angular-file-upload-shim.min.js"></script> 
+<script src="../bower_components/ng-file-upload/angular-file-upload.min.js"></script> 
+</head>
+
+  <body layout="column" ng-controller="AppCtrl">
+      <div dropdown-select="ddSelectOptions" dropdown-model="ddSelectSelected"></div>
+    <md-toolbar layout="column" class="md-tall"><span flex="flex"></span>
+      <div class="md-toolbar-tools">
+         <span class="md-accent">Personal Track</span><span flex/>
+         <div ng-show="usrlogin == null" layout="row">
+		<md-input-container >
+			<label >Username:</label><input type="text" ng-model="loginusr">
+	    </md-input-container> 
+		<md-input-container>
+			<label >Password:</label> <input type="password" ng-model="loginpwd" > 
+		</md-input-container>
+		<md-button class="md-raised md-accent" ng-click="login()">
+  			Login
+		</md-button>
+  </div>
+  <div ng-show="usrlogin != null">
+        <md-select ng-model="someModel">
+  <md-select-label>Select a state</md-select-label>
+  <md-option ng-value="poption.value" ng-repeat="poption in personalOptions">{{ poption.text }}</md-option>
+</md-select>
+  </div>
+      </div>  
+    </md-toolbar>
+    <div ng-view></div>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+
+<div>
+	<table md-colresize="md-colresize" >
+    <tbody class="map-values">
+      
+          <tr>
+          	<th>Map:</th>
+          	<td class="md-table-content"><img ng-src="data:image/png;base64,{{map.image}}" /></td>
+      	</tr>
+      	<tr>
+      		<th>Name:</th>
+      		<td class="md-table-content">{{map.name}}
+      	</tr>
+      	<tr>
+      		<th>Size:</th>
+      		<td class="md-table-content">{{map.size}}</td>
+      	</tr>
+      	<tr>
+      		<th>Modified:</th>
+      		<td class="md-table-content"><span ng-bind="modifiedMap()"></span></td>
+      	</tr>
+    </tbody>
+	</table>
+  </div>

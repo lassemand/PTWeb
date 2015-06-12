@@ -1,0 +1,83 @@
+
+<!-- md-table jade template-->
+<div id="md-table-template">
+
+
+          <div layout="row" flex="flex" class="md-toolbar-item md-tools">          
+            <md-input-container flex="flex" ng-show="toggleSearch">
+            <input id="searchInput" type="text" ng-model="searchText"/>
+          </md-input-container>
+          <span ng-hide="toggleSearch" flex="flex"></span>
+          <a ng-click="searchClicked()" class="md-button md-default-theme"><img src="images/ic_search_api_holo_light.png"></a>
+        </div>
+
+
+  <script type="text/ng-template" id="firstDialogId">
+    <div class="ngdialog-message">
+
+      <form name="userForm" ng-submit="$parent.pushMap()" novalidate>
+            <h3>Create Map</h3>
+      <div layout="row">
+      <div style="height: 38px" class="md-button md-raised" ng-file-select ng-model="$parent.files">Upload</div>
+      <span flex="flex"></span>
+      <div>
+      <img ng-show="$parent.currentImage != null" ng-src="data:image/png;base64,{{$parent.currentImage}}" required class="thumb" />
+      <span ng-hide="$parent.currentImage != null">Insert image</span>
+      </div>
+        </div>
+        <md-input-container ng-class="{'md-input-invalid':userForm.lastName.$error.required && userForm.$submitted}">
+          <label>Enter map name</label>
+          <input name="lastName" type="text" ng-model="$parent.newname" required>
+        </md-input-container>
+        <md-input-container ng-class="{'md-input-invalid':userForm.lastName.$error.required && userForm.$submitted}">
+          <label>Enter map size</label>
+          <input type="number" ng-model="$parent.newsize" required>
+        </md-input-container>
+        <div layout="row">
+        <span flex/>
+        <md-button class="md-raised md-primary" ng-disabled="userForm.$invalid || $parent.currentImage == null" >Save</md-button>
+        </div>
+        </form>
+    </div>
+
+  </script>
+
+      <div class="main-fab">
+
+      <md-button class="md-fab md-accent" ng-click="createDialog()">+</md-button>
+    </div>
+    
+  <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
+    <thead>
+      <tr class="md-table-headers-row">
+        <th ng-repeat="h in headers" class="md-table-header"><span>{{h.name}}</span></th>
+        <th class="md-table-header"><span>Add map to yours</span></th>
+      </tr>
+    </thead>  
+
+    <tbody>
+      
+          <tr ng-repeat="c in content | filter:searchText | startFrom: tablePage*count | limitTo: count" class="md-table-content-row" ng-click="rowClicked(c)">
+        
+        <td ng-repeat="h in headers" class="md-table-content" >{{c[h.field]}}</td>
+        <td ng-if="!checkForMapContainedInUser(c._id)" class="md-table-content" ><img src="images/plus-outline.png"/></td>
+        <td ng-if="checkForMapContainedInUser(c._id)" class="md-table-content" ><img src="images/plus-outline.png"/></td>
+      </tr>
+
+    </tbody>
+    
+  </table>
+
+  <div layout="row" class="md-table-footer"><span class="md-table-count-info">Rows per page : <a class="fakelink" ng-click="goToPage(0); count=10">10</a>,<a class="fakelink" ng-click="goToPage(0); count=25">25</a>,<a class="fakelink" ng-click="goToPage(0); count=50">50</a>,<a class="fakelink" ng-click="goToPage(0); count=100">100</a>(current is {{count}})</span><span flex="flex"></span>
+    <span ng-show="nbOfPages() &gt; 1">
+      <md-button ng-disabled="tablePage==0" ng-click="tablePage=tablePage-1" aria-label="Previous Page" class="md-primary md-hue-2">
+        <img src="images/ic_backarrow.png">
+    </md-button>
+    <a class="fakelink" ng-repeat="i in getNumber(nbOfPages()) track by $index">  
+        <md-button ng-click="goToPage($index)" class="md-primary md-hue-2"><span ng-class="{ 'md-table-active-page': tablePage==$index}">{{$index+1}}</span>
+      </md-button></a>
+      <md-button ng-disabled="tablePage==nbOfPages()-1" ng-click="tablePage=tablePage+1" aria-label="Next Page" class="md-primary md-hue-2">
+        <img src="images/ic_backarrow.png" class="rotate180">
+    </md-button></span></div>
+    
+</div> 
