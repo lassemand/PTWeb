@@ -4,7 +4,7 @@ var app = angular.module('mapsList');
 
 app.controller("MapsListController", mapCtrl);
 
-function mapCtrl($scope,$location, $http, $filter, ngDialog, apiBase){
+function mapCtrl($scope,$location, $http, $filter, $state, ngDialog, apiBase){
   $scope.tablePage = 0;
     $http.get(apiBase + '/map/allmapsnoimage').
   success(function(data, status, headers, config) {
@@ -27,6 +27,8 @@ function mapCtrl($scope,$location, $http, $filter, ngDialog, apiBase){
   error(function(data, status, headers, config) {
     // called asynchronously if an error occurs
     // or server returns response with an error status.
+    console.log('Am i here');
+    $state.go('home');
   });
     var orderBy = $filter('orderBy');
       $scope.order = function(predicate, reverse, array) {

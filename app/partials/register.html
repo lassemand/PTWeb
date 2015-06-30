@@ -1,0 +1,54 @@
+<div>
+	<div style="padding-right: 2em; padding-left: 2em;">
+	<form name="infoValidater">
+		  <md-input-container flex="flex" >
+            <label >First Name</label><input name="firstname" type="text" ng-model="user.firstname" required/>
+          </md-input-container>
+      <div ng-if="infoValidater.firstname.$dirty" ng-messages="infoValidater.firstname.$error" style="color:maroon" role="alert">
+          <div ng-message="required">You did not enter a firstname</div>
+      </div>
+          <md-input-container flex="flex">
+            <label >Last Name</label><input name="lastname" type="text" ng-model="user.lastname" required/>
+          </md-input-container>
+      <div ng-if="infoValidater.lastname.$dirty" ng-messages="infoValidater.lastname.$error" style="color:maroon" role="alert">
+          <div ng-message="required">You did not enter a lastname</div>
+      </div>
+          <md-input-container flex="flex" >
+            <label >Username</label><input name="username" type="text" ng-model="user.username" required username-exist/>
+          </md-input-container>
+      <div ng-if="infoValidater.username.$dirty" ng-messages="infoValidater.username.$error" style="color:maroon" role="alert">
+          <div ng-message="required">You did not enter a username</div>
+          <div ng-message="usernameExists">A user already exists with the entered username</div>
+      </div>
+          <md-input-container flex="flex" >
+            <label >Password</label><input name="password" type="password" ng-model="user.password" required/>
+          </md-input-container>
+      <div ng-if="infoValidater.password.$dirty" ng-messages="infoValidater.password.$error" style="color:maroon" role="alert">
+          <div ng-message="required">You did not enter a password</div>
+      </div>
+          <md-input-container flex="flex" >
+            <label >Re-enter password</label><input name="repassword" type="password" ng-model="user.repassword" compare-to="user.password" required/>
+          </md-input-container>
+      <div ng-if="infoValidater.repassword.$dirty" ng-messages="infoValidater.repassword.$error" style="color:maroon" role="alert">
+          <div ng-message="required">You did not re-enter the password</div>
+          <div ng-message="compareTo">The password is not matching the entered password</div>
+      </div>
+          <md-input-container flex="flex" >
+            <label >Email</label><input type="email" name="email" ng-model="user.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"required email-exist/>
+          </md-input-container>
+      <div ng-if="infoValidater.email.$dirty" ng-messages="infoValidater.email.$error" style="color:maroon" role="alert">
+          <div ng-message="required">You did not enter an email</div>
+          <div ng-message="pattern">The format of the email is incorrect</div>
+          <div ng-message="emailExists">A user already exists with the entered email</div>
+      </div>
+	</form>
+	<div style="position: absolute; right: 2em;">
+		<md-button class="md-raised md-accent" style="background: grey;" ng-click="cancel()">
+  			Cancel
+		</md-button>
+		<md-button class="md-raised md-accent"  ng-click="register()" ng-disabled="infoValidater.$invalid || infoValidater.$pending">
+  			Register
+		</md-button>
+	</div>
+	<div>
+</div>
