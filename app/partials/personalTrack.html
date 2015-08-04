@@ -1,0 +1,27 @@
+      <div ng-show="map != null">
+      	<img id="map" ng-src="data:image/png;base64,{{map.image}}"/>
+		<div id="overlay">
+			<ng-md-icon id="dev.device" ng-repeat="dev in eventdevices" ng-show="dev.visible" ng-if="dev.locations.length > 0 && map != null" icon="place" class="element" style="color:{{dev.color}}; top:{{calculateLatitude(dev.locations[dev.locations.length-1].latitude)-24}}px; left: {{calculateLongitude(dev.locations[dev.locations.length-1].longitude)}}px"></ng-md-icon>
+		</div>
+		<div class="overview" layout="column">
+			<div class="overviewheader" layout="row">
+				<p>Choose runners</p>
+				<span flex></span>
+				<ng-md-icon ng-show="showOverview" ng-click="showOverview = !showOverview" icon="keyboard_arrow_down"></ng-md-icon>
+				<ng-md-icon ng-hide="showOverview" ng-click="showOverview = !showOverview" icon="keyboard_arrow_up"></ng-md-icon>
+			</div>
+			<div class="overviewbody" layout="row" ng-show="showOverview">
+				<div layout="column" ng-repeat="runner in eventdevices">
+					<div layout="row">
+						<md-checkbox ng-model="runner.visible"/>
+						<span >{{runner.runner.name}}</span>
+						<span flex></span>
+						<ng-md-icon ng-repeat="dev in eventdevices" style="color:{{dev.color}};" icon="place"></ng-md-icon>
+					</div>
+					<md-divider/>
+				<div>
+			</div> 
+		<div>
+      	</div>
+      	<span ng-hide="map != null">No image loaded</span>
+      

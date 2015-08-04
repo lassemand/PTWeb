@@ -1,0 +1,75 @@
+<div>
+	<div layout="row"> 
+	<md-select ng-model="optionvalue" flex>
+    	<md-option ng-value="team" ng-repeat="team in teams">{{team.name}}</md-option>
+    </md-select>
+	<md-button class="md-fab md-accent" ng-click="addRunner()">+</md-button>
+</div>
+	 <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
+    <thead>
+      <tr class="md-table-headers-row">
+        <th ng-repeat="h in headers" class="md-table-header"><span>{{h.name}}</span></th>
+      </tr>
+    </thead>  
+
+    <tbody>
+        <tr ng-repeat="c in optionvalue.runners" class="md-table-content-row" >
+        <td class="md-table-content" >{{c.name}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+	<script type="text/ng-template" id="createTeam">
+          <md-dialog layout="column"> 
+           <h2 style="text-align: center;">Create Team</h2>
+          <div class="md-actions">
+          <form name="teamValidator" ng-submit="teamSubmit(_name)">
+          <div ng-if="falseLogin" style="color:maroon" role="alert">The username and/or password did not match any users</div>
+          <md-input-container flex="flex">
+            <label >Name</label><input type="text" ng-model="_name" required/>
+          </md-input-container>
+            <md-button type="button" ng-click="cancel()">Cancel</md-button>
+            <md-button layout-align="start right" class="md-raised md-primary">Create</md-button>
+          </form>
+          </div>
+          </md-dialog>
+    </script>
+
+      <script type="text/ng-template" id="addRunner">
+          <md-dialog layout="column"> 
+           <h2 style="text-align: center;">Add Runners</h2>
+          <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
+            <tbody>
+            <thead>
+              <tr class="md-table-headers-row">
+                <th class="md-table-header"><span>Added runners</span></th>
+              </tr>
+            </thead>  
+              <tr ng-repeat="c in runners" class="md-table-content-row" ng-click="addRunners(c)" >
+                <td class="md-table-content" >{{c.name}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <md-input-container flex="flex">
+            <label >Search on runner</label><input type="text" ng-model="_name"/>
+          </md-input-container>
+          <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
+            <thead>
+              <tr class="md-table-headers-row">
+                <th class="md-table-header"><span>Click on runner you wish to invite to team</span></th>
+              </tr>
+            </thead>  
+            <tbody>
+              <tr ng-repeat="c in allRunners | filter:_name | removeAdded:runners" class="md-table-content-row" ng-click="addRunners(c)" >
+                <td class="md-table-content" >{{c.name}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div layout="row" flex>
+            <md-button type="button" ng-click="cancel()">Cancel</md-button>
+            <md-button layout-align="start right" class="md-raised md-primary" ng-click="addRunner()">Done</md-button>
+          </div>
+          </md-dialog>
+    </script>
+
+</div>

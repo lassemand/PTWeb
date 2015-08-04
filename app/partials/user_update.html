@@ -1,0 +1,145 @@
+<script type="text/ng-template" id="tName">
+<form name="infoValidater" ng-submit="updateRow()">
+<md-input-container flex="flex" >
+<label>New name</label><input name="name" ng-model="updateUser.name" required/>
+</md-input-container>
+<div ng-if="infoValidater.name.$dirty" ng-messages="infoValidater.name.$error" style="color:maroon" role="alert"  >
+<div ng-message="required">You did not enter your a name</div>
+</div>
+<div layout="row">
+<span flex></span>
+<md-button type="button" ng-click="refresh()">Cancel</md-button>
+<md-button class="md-primary md-raised">Update</md-button>
+</div> 
+<form>
+</script>
+<script type="text/ng-template" id="tPassword">
+<form name="infoValidater" ng-submit="updateRow()">
+<md-input-container flex="flex" >
+<label>Current password</label><input type="password" name="cpassword" ng-model="updateUser.currentPassword" required check-password/>
+</md-input-container>
+<div ng-if="infoValidater.npassword.$dirty" ng-messages="infoValidater.npassword.$error" style="color:maroon" role="alert"  >
+<div ng-message="required">You did not enter your password</div>
+</div>
+<md-input-container flex="flex" >
+<label>New password</label><input type="password" name="npassword" ng-model="updateUser.password" required/>
+</md-input-container>
+<div ng-if="infoValidater.npassword.$dirty" ng-messages="infoValidater.npassword.$error" style="color:maroon" role="alert"  >
+<div ng-message="required">You did not enter a new password</div>
+</div>
+<md-input-container flex="flex" >
+<label>Re-enter password</label><input type="password" ng-model="updateUser.repassword" name="repassword" required compare-to="updateUser.password"/>
+</md-input-container>
+<div ng-if="infoValidater.repassword.$dirty" ng-messages="infoValidater.repassword.$error" style="color:maroon" role="alert"  >
+<div ng-message="required">You did not enter a new password</div>
+<div ng-message="compareTo">The password is not matching the entered password</div>
+</div>
+<div layout="row">
+<span flex></span>
+<md-button type="button" ng-click="refresh()">Cancel</md-button>
+<md-button class="md-primary md-raised">Update</md-button>
+</div> 
+<form>
+
+</script>
+<script type="text/ng-template" id="tEmail">
+<form name="infoValidater" ng-submit="updateRow()">
+<md-input-container flex="flex" >
+<label>Email</label><input type="email" name="email" ng-model="updateUser.email" required email-exist ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"/>
+</md-input-container>
+<div ng-if="infoValidater.email.$dirty" ng-messages="infoValidater.email.$error" style="color:maroon" role="alert"  >
+<div ng-message="required">You did not enter an email</div>
+<div ng-message="pattern">The format of the email is incorrect</div>
+<div ng-message="emailExists">A user already exists with the entered email</div>
+</div>
+<div layout="row">
+<span flex></span>
+<md-button type="button" ng-click="refresh()">Cancel</md-button>
+<md-button class="md-primary md-raised">Update</md-button>
+</div> 
+
+<form>
+</script>
+<script type="text/ng-template" id="tDefaultDevice">
+<p>Select default device:</p>
+	<p ng-show="devices == null || devices.length == 0">You have no devices attached</p>
+    <md-select ng-show=" devices != null && devices.length != 0" ng-init="dddevice = devices[0]" ng-model="dddevice">
+    <md-option ng-value="opt" ng-repeat="opt in devices">{{opt.name}}</md-option>
+    </md-select>
+    <p ng-show="user.defaultdevice == null">No default device has been attached</p>
+    <div ng-show="user.defaultdevice != null" layout="row">
+    	<p>Current default device:</p>
+    	<p>{{aktualDefaultDevice.name}}</p>
+    </div>
+<div layout="row">
+<span flex></span>
+<md-button type="button" ng-click="refresh()">Cancel</md-button>
+<md-button class="md-primary md-raised" ng-click="updateDefaultDevice(dddevice)">Update</md-button>
+</div> 
+</script>
+
+<div>
+	<div style="padding-right: 2em; padding-left: 2em;">
+		<div layout="column">
+			<a id="Name" ng-mouseleave="removeHightlight('Name')" ng-mouseenter="highlight('Name')" ng-click="update('Name')" style="height: 3em;" replace-element>
+				<div style="margin-top: 1em;" layout="row">
+					<span class="settingsListItemLabel">Name:</span>
+					<span class="settingsListItemLabeled" flex="flex">
+						<strong>{{user.name}}</strong>
+					</span>
+					<span layout="row" >
+						<ng-md-icon icon="edit" ></ng-md-icon>
+						<span class="settingsListItemEdit">Change</span>
+					</span>
+				</div>
+			</a>
+			<md-divider/>
+		</div>
+		<div layout="column">
+			<a id="Email" ng-mouseleave="removeHightlight('Email')" ng-mouseenter="highlight('Email')" ng-click="update('Email')" style="height: 3em;" replace-element>
+				<div style="margin-top: 1em;" layout="row">
+					<span class="settingsListItemLabel">Email:</span>
+					<span class="settingsListItemLabeled" flex="flex">
+						<strong>{{user.email}}</strong>
+					</span>
+					<span layout="row" >
+						<ng-md-icon icon="edit" ></ng-md-icon>
+						<span class="settingsListItemEdit">Change</span>
+					</span>
+				</div>
+			</a>
+			<md-divider/>
+		</div>
+		<div layout="column">
+			<a id="Password" ng-mouseleave="removeHightlight('Password')" ng-mouseenter="highlight('Password')" ng-click="update('Password')" style="height: 3em;" replace-element>
+				<div style="margin-top: 1em;" layout="row">
+					<span class="settingsListItemLabel">Password:</span>
+					<span class="settingsListItemLabeled" flex="flex">
+						<strong>Change password</strong>
+					</span>
+					<span layout="row" >
+						<ng-md-icon icon="edit" ></ng-md-icon>
+						<span class="settingsListItemEdit">Change</span>
+					</span>
+				</div>
+			</a>
+			<md-divider/>
+		</div>
+		<div layout="column">
+			<a id="DefaultDevice" ng-mouseleave="removeHightlight('DefaultDevice')" ng-mouseenter="highlight('DefaultDevice')" ng-click="update('DefaultDevice')" style="height: 3em;" replace-element>
+				<div style="margin-top: 1em;" layout="row">
+					<span class="settingsListItemLabel">Default Device:</span>
+					<span class="settingsListItemLabeled" flex="flex">
+						<strong ng-if="user.defaultdevice != null">{{aktualDefaultDevice.name}}</strong>
+						<strong ng-if="user.defaultdevice == null">No default device has been selected</strong>
+					</span>
+					<span layout="row" >
+						<ng-md-icon icon="edit" ></ng-md-icon>
+						<span class="settingsListItemEdit">Change</span>
+					</span>
+				</div>
+			</a>
+			<md-divider/>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,36 @@
+	<script type="text/ng-template" id="createDevice">
+          <md-dialog layout="column"> 
+           <h2 style="text-align: center;">Create Device</h2>
+          <div class="md-actions">
+          <form name="teamValidator" ng-submit="deviceSubmit(_name, _identifier)">
+          <div ng-if="falseLogin" style="color:maroon" role="alert">The username and/or password did not match any users</div>
+          <md-input-container flex="flex">
+            <label >Identifier</label><input type="text" ng-model="_identifier" required device-validation/>
+          </md-input-container>
+          <md-input-container flex="flex">
+            <label >Name</label><input type="text" ng-model="_name" required/>
+          </md-input-container>
+            <md-button type="button" ng-click="cancel()">Cancel</md-button>
+            <md-button layout-align="start right" class="md-raised md-primary">Create</md-button>
+          </form>
+          </div>
+          </md-dialog>
+    </script>
+<div>
+	<div class="main-fab">
+      <md-button class="md-fab md-accent" ng-click="createDialog()">+</md-button>
+    </div>
+	 <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
+    <thead>
+      <tr class="md-table-headers-row">
+        <th ng-repeat="h in headers" class="md-table-header"><span>{{h.name}}</span></th>
+      </tr>
+    </thead>  
+
+    <tbody>
+        <tr ng-repeat="c in devices" class="md-table-content-row" >
+        <td class="md-table-content" >{{c.name}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

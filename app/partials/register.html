@@ -1,6 +1,6 @@
 <div>
 	<div style="padding-right: 2em; padding-left: 2em;">
-	<form name="infoValidater">
+	<form name="infoValidater" ng-submit="register()">
 		  <md-input-container flex="flex" >
             <label >First Name</label><input name="firstname" type="text" ng-model="user.firstname" required/>
           </md-input-container>
@@ -41,14 +41,14 @@
           <div ng-message="pattern">The format of the email is incorrect</div>
           <div ng-message="emailExists">A user already exists with the entered email</div>
       </div>
+      <div style="position: absolute; right: 2em;">
+        <md-button type="button" class="md-raised md-accent" style="background: grey;" ng-click="cancel()">
+          Cancel
+        </md-button>
+        <md-button class="md-raised md-accent" >
+          Register
+      </md-button>
+    </div>
 	</form>
-	<div style="position: absolute; right: 2em;">
-		<md-button class="md-raised md-accent" style="background: grey;" ng-click="cancel()">
-  			Cancel
-		</md-button>
-		<md-button class="md-raised md-accent"  ng-click="register()" ng-disabled="infoValidater.$invalid || infoValidater.$pending">
-  			Register
-		</md-button>
-	</div>
 	<div>
 </div>

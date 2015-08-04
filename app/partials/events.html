@@ -1,0 +1,20 @@
+<div>
+	<div layout="row"> 
+	<md-button class="md-fab md-accent" ng-click="createEvent($event)">+</md-button>
+</div>
+	 <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
+    <thead>
+      <tr class="md-table-headers-row">
+        <th ng-repeat="h in headers" class="md-table-header"><span>{{h.name}}</span></th>
+      </tr>
+    </thead>  
+
+    <tbody>
+        <tr ng-repeat="c in events" class="md-table-content-row" ng-click="showEvent(c)">
+        <td class="md-table-content" >{{c.name}}</td>
+        <td class="md-table-content" >{{dateConvert(c.start)}}</td>
+        <td class="md-table-content" >{{dateConvert(c.end)}}</td>
+      </tr>
+    </tbody>
+  </table>
+ </div>

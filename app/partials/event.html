@@ -1,0 +1,53 @@
+<div>
+	<div layout="column" class="defaultMargin">
+		<div layout="row">
+			<p>Name:</p>
+			<span flex></span>
+			<p>{{event.name}}</p>
+		</div>
+		<md-divider/>
+		<div layout="row">
+			<p>Start:</p>
+			<span flex></span>
+			<p>{{convertLong(event.start)}}</p>
+		</div>
+		<md-divider/>
+		<div layout="row">
+			<p>End:</p>
+			<span flex></span>
+			<p>{{convertLong(event.end)}}</p>
+		</div>
+		<md-divider/>
+		<div layout="row">
+			<p>Owner:</p>
+			<span flex></span>
+			<a href ng-click="changeToRunner(event.owner)"><p>{{event.owner.name}}</p></a>
+		</div>
+		<md-divider/>
+		<div layout="row">
+			<p>Map:</p>
+			<span flex></span>
+			<a href ng-click="changeToMap(event.map)"><p>{{event.map.name}}</p></a>
+		</div>
+		<md-divider/>
+		<div layout="row">
+			<p>Modified At:</p>
+			<span flex></span>
+			<p>{{convertLong(event.modified)}}</p>
+		</div>
+		<md-divider/>
+		<div layout="row">
+			<span flex></span>
+			<md-button ng-click="changeToRunner()">Add runner</md-button>
+		</div>
+		<div layout="row">
+			<span flex></span>
+			<md-button ng-click="changeToTeam()">Add runner from teams</md-button>
+		</div>
+		<div layout="row">
+			<span flex></span>
+			<md-button ng-click="changeToMap()">Personal Track</md-button>
+		</div>
+	</div>
+
+</div>

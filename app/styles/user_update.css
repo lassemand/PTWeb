@@ -1,0 +1,15 @@
+.settingsListItemLabel {
+  color: #333;
+  float: left;
+  width: 165px;
+}
+.settingsListItemLabeled {
+  padding-left: 0;
+  color: #9197a3;
+}
+.settingsListItemEdit {
+  color: #3b5998;
+}
+.settingsHighlighted {
+  background-color: #F0F8FF;
+}

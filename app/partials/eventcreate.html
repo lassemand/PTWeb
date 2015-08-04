@@ -1,0 +1,47 @@
+<h2 style="text-align: center;">Create Event</h2>
+
+<div ng-show="pagenumber == 0" layout="column">
+  <form id="firstInfo" ng-submit="submitFirst(eventname, startDate, endDate)">
+          <md-input-container flex="flex">
+            <label >Start date</label><input type="text" ng-model="startDate" ng-focus="showStartPicker()" required ui-date ui-date-format="dd MMMM yyyy"/>
+          </md-input-container>
+           <md-input-container flex="flex">
+            <label >End date</label><input type="text" ng-model="endDate" ng-focus="showEndPicker()" required ui-date ui-date-format="dd MMMM yyyy"/>
+          </md-input-container>
+          <md-input-container flex="flex">
+            <label >Event Name</label><input type="text" ng-model="eventname" required/>
+          </md-input-container>
+    </form>
+  </div>
+  <div ng-show="pagenumber == 1">
+    <h3 class="md-table-header"><span>Click on the map you wish to use for your event</span></h3>
+  <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table" ng-if="choosenMap == null">
+    <thead>
+      <tr class="md-table-headers-row">
+        <th ng-repeat="h in headers" class="md-table-header"><span>{{h.name}}</span></th>
+        
+      </tr>
+    </thead>  
+    <tbody>
+        <tr ng-repeat="c in maps" ng-click="chooseMap(c)">
+        <td class="md-table-content" >{{c.name}}</td>
+        <td class="md-table-content" >{{c.size}}</td>
+        <td class="md-table-content" >{{convertLong(c.modified)}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div layout="column" ng-if="choosenMap != null">
+  <div layout="row" >
+    <p style="width: 10em;">Choosen Map: </p>
+    <p style="width: 10em;">{{choosenMap.name}}</p>
+  </div>
+  <md-button class="md-raised" ng-click="chooseMap(null)">Choose new map</md-button>
+</div>
+  </div>
+<div layout="row">
+   <md-button class="md-raised" type="button" ng-click="previousPage()" ng-show="pagenumber != 0">Back</md-button>
+   <md-button class="md-raised" type="button" ng-click="cancel()">Cancel</md-button>
+   <md-button class="md-raised md-primary" type="button" ng-click="submitEvent(choosenMap)" ng-show="pagenumber == maxnumber">Save</md-button>
+   <md-button class="md-raised" type="submit" form="firstInfo" ng-show="pagenumber != maxnumber">Next</md-button>
+ </div>
+

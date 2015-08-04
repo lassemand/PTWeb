@@ -1,0 +1,30 @@
+<div ng-if="!initialLoaded">
+	<p>Loading</p>
+</div>
+<div ng-if="initialLoaded" ng-cloak>
+	<p ng-if="type == 0">Add persons to the event</p>
+	<p ng-if="type == 1">Add all persons on a team to the event</p>
+	<md-input-container flex="flex">
+	<label>{{searchHint}}</label><input id="searchInput" type="text" ng-model="searchText"/>
+</md-input-container>
+<table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
+	<thead>
+		<tr class="md-table-headers-row">
+			<th class="md-table-header"><span>Name</span></th>
+			<th class="md-table-header" ng-if="type == 1"><span>Size on team</span></th>
+			<th class="md-table-header"><span>Add runner to event</span></th>
+		</tr>
+	</thead>  
+
+	<tbody>
+
+		<tr ng-repeat="c in content | filter:searchText | startFrom:tablePage*count:optionvalue:count | limitTo:count" class="md-table-content-row" >
+			<td class="md-table-content" >{{c.name}}</td>
+			<td ng-if="checkForContained(c) == 0" type="button" class="md-table-content" ng-click="noDefaultDevice()"></td>
+			<td ng-if="checkForContained(c) == 1" type="button" class="md-table-content" ng-click="addEvent(c.defaultdevice, c._id.$oid)"><md-button><ng-md-icon icon="add"/></md-button></td>
+			<td ng-if="checkForContained(c) == 2" type="button" class="md-table-content" ng-click="removeEvent(c.defaultdevice, $index)"><md-button ><ng-md-icon icon="remove"/></md-button></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+

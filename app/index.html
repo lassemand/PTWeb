@@ -3,29 +3,44 @@
 <head>
 
 <link rel="stylesheet" href="styles/index.css">
+<link rel="stylesheet" href="styles/user_update.css">
+<link rel="stylesheet" href="styles/event.css">
+<link rel="stylesheet" href="styles/personalTrack.css">
+
 <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
-<link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog.css">
-<link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog-theme-default.css">
-<link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog-theme-plain.css">
 <link rel="stylesheet" href="bower_components/angular-material-icons/angular-material-icons.css">
+<link rel="stylesheet" href="bower_components/mdPickers/dist/mdPickers.min.css">
 
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-animate/angular-animate.min.js"></script>
 <script src="bower_components/angular-aria/angular-aria.min.js"></script>
 <script src="bower_components/angular-material/angular-material.min.js"></script>
-<script src="bower_components/ngDialog/js/ngDialog.js"></script>
 <script src="bower_components/ng-file-upload/angular-file-upload-shim.min.js"></script> 
 <script src="bower_components/ng-file-upload/angular-file-upload.min.js"></script> 
 <script src="bower_components/angular-material-icons/angular-material-icons.min.js"></script> 
 <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/mdPickers/dist/mdPickers.min.js"></script>
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/exifreader/js/ExifReader.js"></script>
+
 
 <script src="scripts/index.js"></script>
 <script src="scripts/register.js"></script>
+<script src="scripts/user_update.js"></script>
 <script src="scripts/map.js"></script>
 <script src="scripts/maps-list.js"></script>
 <script src="scripts/date.js"></script>
+<script src="scripts/mainpage.js"></script>
+<script src="scripts/team.js"></script>
+<script src="scripts/devices.js"></script>
+<script src="scripts/events.js"></script>
+<script src="scripts/event.js"></script>
+<script src="scripts/eventdevice.js"></script>
+<script src="scripts/personalTrack.js"></script>
+
 
 
 
@@ -33,9 +48,9 @@
 
   <body layout="row" ng-controller="AppCtrl" flex>
     <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
-  <md-toolbar class="md-tall md-hue-2">
+  <md-toolbar style="position: fixed;" class="md-tall md-hue-2">
     <span flex></span>
-    <div layout="column" class="md-toolbar-tools-bottom inset" ng-hide="notLoggedIn()">
+    <div layout="column" class="md-toolbar-tools-bottom inset" ng-show="loggedIn()">
       <user-avatar></user-avatar>
       <span></span>
       <div>{{user().name}}</div>
@@ -43,30 +58,30 @@
     </div>
   </md-toolbar>
   <md-list>
-    <md-item ng-repeat="item in menu">
-      <a>
-        <md-item-content md-ink-ripple layout="row" layout-align="start center">
+  <a ng-repeat="item in siderow">
+  <md-subheader>{{item.header}}</md-subheader>
+    <md-item ng-repeat="b in item.body">
+    <md-item-content ng-click="changeLocation(b.reference)" md-ink-ripple layout="row" layout-align="start center">
           <div class="inset">
-            <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+            <ng-md-icon icon="{{b.icon}}"></ng-md-icon>
           </div>
-          <div class="inset">{{item.title}}
-          </div>
+          <div class="inset">{{b.title}}</div>
         </md-item-content>
-      </a>
     </md-item>
     <md-divider></md-divider>
-    <md-subheader>Management</md-subheader>
+    </a>
+
   </md-list>
 </md-sidenav>
     <section flex layout='column'>
     <md-toolbar layout="row" style="height: 2em">
        <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu"><ng-md-icon icon="menu"></ng-md-icon></md-button>
        <span flex></span>
-      <div ng-show="notLoggedIn()">
-       <md-button ng-click="registerUser()">Register</md-button>
-       <md-button  ng-click="login()">Login</md-button>
+      <div ng-hide="loggedIn()">
+       <md-button style="height: 100%;" ng-click="changeLocation('register')">Register</md-button>
+       <md-button style="height: 100%;" flex ng-click="login()">Login</md-button>
        </div>
-       <md-button ng-hide="notLoggedIn()" ng-click="logout()">Logout</md-button>
+       <md-button ng-show="loggedIn()" ng-click="logout()">Logout</md-button>
      
     </md-toolbar>
     <div ui-view></div>
@@ -74,7 +89,6 @@
       <script type="text/ng-template" id="loginDialog">
           <md-dialog layout="column"> 
            <h2 style="text-align: center;">Login</h2>
-
           <div class="md-actions">
           <form name="loginValidater" ng-submit="submit(_username, _password)">
           <div ng-if="falseLogin" style="color:maroon" role="alert">The username and/or password did not match any users</div>
