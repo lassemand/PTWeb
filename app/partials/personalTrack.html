@@ -16,12 +16,12 @@
 						<md-checkbox ng-model="runner.visible"/>
 						<span >{{runner.runner.name}}</span>
 						<span flex></span>
-						<ng-md-icon ng-repeat="dev in eventdevices" style="color:{{dev.color}};" icon="place"></ng-md-icon>
+						<ng-md-icon style="color:{{runner.color}};" icon="place"></ng-md-icon>
 					</div>
 					<md-divider/>
-				<div>
+				</div>
 			</div> 
-		<div>
       	</div>
+      </div>
       	<span ng-hide="map != null">No image loaded</span>
       

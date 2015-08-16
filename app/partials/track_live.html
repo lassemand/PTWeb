@@ -1,0 +1,20 @@
+<div id="map-canvas"></div>
+		<div class="overview" layout="column">
+			<div class="overviewheader" layout="row">
+				<p>Choose runners</p>
+				<span flex></span>
+				<ng-md-icon ng-show="showOverview" ng-click="showOverview = !showOverview" icon="keyboard_arrow_down"></ng-md-icon>
+				<ng-md-icon ng-hide="showOverview" ng-click="showOverview = !showOverview" icon="keyboard_arrow_up"></ng-md-icon>
+			</div>
+			<div class="overviewbody" layout="row" ng-show="showOverview">
+				<div layout="column" ng-repeat="runner in marker">
+					<div layout="row">
+						<md-checkbox ng-change="changeVisibilityOfMarker(runner.eventdevice.device)" ng-model="runner.marker.visible"/>
+						<span >{{runner.eventdevice.runner.name}}</span>
+						<span flex></span>
+						<ng-md-icon style="color:{{runner.color}};" icon="place"></ng-md-icon>
+					</div>
+					<md-divider/>
+				</div>
+			</div> 
+      	</div>

@@ -4,6 +4,7 @@ angular.module('map', ['ngMaterial','StarterApp']);
 angular.module('mapsList', ['ngAnimate', 'ngAria', 'ngMaterial', 'angularFileUpload', 'StarterApp', 'ngMdIcons']);
 angular.module('register', ['ngMaterial', 'StarterApp']);
 
+var objectApiGroundBase = 'http://46.101.134.212:8080/PersonalTrack';
 var app = angular.module('StarterApp', ['ngMaterial', 'mapsList', 'ui.router', 'map', 'ngMessages', 'ngMdIcons', 'mdPickers']);
 
 app.run(function ($rootScope, $state, loginService) {
@@ -44,8 +45,12 @@ app.controller('LoginModalCtrl', function ($scope, $rootScope, $mdDialog, $http,
 
 });
 
-app.constant('apiBase', (function() {
-  return 'http://localhost:8080/PersonalTrack/rest';
+app.constant('apiMapsBase', (function() {
+  return objectApiGroundBase + '/maps/';
+})());
+
+app.constant('apiBase', (function(apiGroundBase) {
+  return objectApiGroundBase + '/rest';
 })());
 
 app.service('loginService', function ($http, $mdDialog, apiBase, $rootScope) {
@@ -101,7 +106,6 @@ app.service('loginService', function ($http, $mdDialog, apiBase, $rootScope) {
 
 app.service('dateConverter', function () {
   var myFunctions = {
-
     dateFormat : function(mydate){
       return mydate.format('j F Y');
     },
@@ -113,9 +117,11 @@ app.service('dateConverter', function () {
 });
     
 
+
 app.controller("AppCtrl", AppCtrl);
 
-function AppCtrl($scope, $log, $http, $upload, $location, $mdBottomSheet, $mdSidenav, apiBase, loginService, $state){
+function AppCtrl($scope, $log, $http, $upload, $location, $mdBottomSheet, $mdSidenav, apiBase, loginService, $state, $window){
+
   loginService.setupHttp();
   if(loginService.loggedIn()){
     var user = loginService.user();
@@ -338,11 +344,21 @@ app.config(
       }
     };
 
-    var personalTrack = {
-        name: 'personalTrack',
-        url: '/personalTrack?eventId&mapId',
-        templateUrl: 'partials/personalTrack.html',
-        controller: 'PersonalTrackController',
+      var liveTrackController = {
+        name: 'Live Track',
+        url: '/track_live?eventId&mapId',
+        templateUrl: 'partials/track_live.html',
+        controller: 'LiveTrackController',
+      data: {
+        requireLogin: true
+      }
+    };
+
+      var historyTrackController = {
+        name: 'History Track',
+        url: '/track_history?eventId&mapId',
+        templateUrl: 'partials/track_history.html',
+        controller: 'HistoryTrackController',
       data: {
         requireLogin: true
       }
@@ -360,7 +376,8 @@ app.config(
     .state(events)
     .state(myevent)
     .state(addtoevent)
-    .state(personalTrack);
+    .state(liveTrackController)
+    .state(historyTrackController);
     });
 
 app.config(function($mdThemingProvider) {

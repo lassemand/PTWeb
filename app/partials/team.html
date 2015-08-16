@@ -1,10 +1,11 @@
 <div>
-	<div layout="row"> 
 	<md-select ng-model="optionvalue" flex>
     	<md-option ng-value="team" ng-repeat="team in teams">{{team.name}}</md-option>
     </md-select>
-	<md-button class="md-fab md-accent" ng-click="addRunner()">+</md-button>
 </div>
+    <div class="main-fab">
+      <md-button class="md-fab md-accent" ng-click="addRunner()">+</md-button>
+    </div>
 	 <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
     <thead>
       <tr class="md-table-headers-row">

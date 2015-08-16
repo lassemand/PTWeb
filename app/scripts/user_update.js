@@ -63,7 +63,7 @@ function UserUpdateController($scope, $window, apiBase, $http, loginService, $do
         $scope.updateUser.defaultdevice = deviceId._id.$oid;
         console.log($scope.updateUser);
                $http({
-            url: apiBase + '/runner/updateDefaultDevice',
+            url: apiBase + '/runner',
             method: 'PUT',
             params: {id: $scope.user._id.$oid},
             data: $scope.updateUser

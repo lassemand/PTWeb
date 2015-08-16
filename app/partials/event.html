@@ -38,15 +38,19 @@
 		<md-divider/>
 		<div layout="row">
 			<span flex></span>
-			<md-button ng-click="changeToRunner()">Add runner</md-button>
+			<md-button ng-click="changeToRunner()" ng-if="eventTimeComparedToAktuelTime() == 0">Add runner</md-button>
 		</div>
 		<div layout="row">
 			<span flex></span>
-			<md-button ng-click="changeToTeam()">Add runner from teams</md-button>
+			<md-button ng-click="changeToTeam()" ng-if="eventTimeComparedToAktuelTime() == 0">Add runner from teams</md-button>
 		</div>
 		<div layout="row">
 			<span flex></span>
-			<md-button ng-click="changeToMap()">Personal Track</md-button>
+			<md-button ng-click="changeToMap()" ng-if="eventTimeComparedToAktuelTime() == 1">Live Tracking</md-button>
+		</div>
+		<div layout="row">
+			<span flex></span>
+			<md-button ng-click="changeToHistory()" ng-if="eventTimeComparedToAktuelTime() == 2">Track event</md-button>
 		</div>
 	</div>
 

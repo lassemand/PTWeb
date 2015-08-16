@@ -1,16 +1,27 @@
 <h2 style="text-align: center;">Create Event</h2>
 
 <div ng-show="pagenumber == 0" layout="column">
-  <form id="firstInfo" ng-submit="submitFirst(eventname, startDate, endDate)">
+  <form id="firstInfo" ng-submit="submitFirst(eventname, startDate, endDate, startDateHour, endDateHour)">
+        <div layout="row">
           <md-input-container flex="flex">
-            <label >Start date</label><input type="text" ng-model="startDate" ng-focus="showStartPicker()" required ui-date ui-date-format="dd MMMM yyyy"/>
+            <label >Start date</label><input type="text" ng-model="startDate" id="startSelector" required ui-date ui-date-format="dd MMMM yyyy"/>
           </md-input-container>
+          <md-input-container flex="flex">
+            <label >Start date hour and minute</label><input id="startdatehour" value="09:30" type="text" ng-model="startDateHour" ui-date ui-date-format="hh:mm" required/>
+          </md-input-container>
+        </div>
+        <div layout="row">
            <md-input-container flex="flex">
-            <label >End date</label><input type="text" ng-model="endDate" ng-focus="showEndPicker()" required ui-date ui-date-format="dd MMMM yyyy"/>
+            <label >End date</label><input type="text" ng-model="endDate" id="endSelector" required ui-date ui-date-format="dd MMMM yyyy"/>
           </md-input-container>
+          <md-input-container flex="flex">
+            <label >End date hour and minute</label><input type="text" id="enddatehour" value="09:30" ng-model="endDateHour" ui-date ui-date-format="hh:mm" required/>
+          </md-input-container>
+          </div>
           <md-input-container flex="flex">
             <label >Event Name</label><input type="text" ng-model="eventname" required/>
           </md-input-container>
+
     </form>
   </div>
   <div ng-show="pagenumber == 1">

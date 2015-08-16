@@ -13,15 +13,15 @@ i {
 }
 
 .main-fab {
-  position:absolute;
-  z-index:20;
-  font-size:30px;
-  top: 5px;
-  right: 10px;
-  float: right;
-  -webkit-transform:scale(.88,.88);
-      -ms-transform:scale(.88,.88);
-          transform:scale(.88,.88);
+position: fixed;
+    z-index: 20;
+    font-size: 30px;
+    bottom: 10px;
+    right: 10px;
+    float: right;
+    -webkit-transform: scale(.88,.88);
+    -ms-transform: scale(.88,.88);
+    transform: scale(.88,.88);
 }
 
 .md-breadcrumb {

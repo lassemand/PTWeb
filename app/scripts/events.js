@@ -12,6 +12,7 @@ function evtCtrl($scope, $http, apiBase, loginService, $location){
             method: 'GET',
             params: {id: $scope.user._id.$oid}
       }).success(function(data, status, headers, config) {
+        console.log(data);
         $scope.events = data;
       });
     $scope.headers = [
@@ -31,11 +32,19 @@ function evtCtrl($scope, $http, apiBase, loginService, $location){
       $location.path('events/create');
     }
     $scope.showEvent = function(event){
+      console.log(event);
       $location.path('event/'+ event._id.$oid);
     }
 }
 
 function crtEvtCtrl($scope, $http, apiBase, loginService, $mdDatePicker, $location, $window, $mdDialog, dateConverter){
+  $('#startSelector').datepicker({minDate: new Date(), dateFormat: 'dd MM yy', onSelect: function(dateText){
+    $('#endSelector').datepicker("option", "minDate", new Date(dateText));
+    $(this).change();
+  }});
+  $('#endSelector').datepicker({minDate: new Date(), dateFormat: 'dd MM yy'});
+  $('#startdatehour').clockpicker({donetext: 'Done'});
+  $('#enddatehour').clockpicker({donetext: 'Done'});
     $scope.user = loginService.user();
         $scope.headers = [
      {
@@ -69,16 +78,6 @@ function crtEvtCtrl($scope, $http, apiBase, loginService, $mdDatePicker, $locati
   $scope.cancel = function(){
     $window.history.back();
   }
-  $scope.showStartPicker = function(ev) {
-      $mdDatePicker(ev, $scope.currentDate).then(function(selectedDate) {
-        $scope.startDate = $scope.dateFormat(selectedDate);
-      });;
-    }  
-  $scope.showEndPicker = function(ev) {
-      $mdDatePicker(ev, $scope.startDate).then(function(selectedDate) {
-        $scope.endDate = $scope.dateFormat(selectedDate);
-      });;
-    }  
     $scope.convertLong = function(longDate){
       return dateConverter.convertLong(longDate);
     }
@@ -87,6 +86,9 @@ function crtEvtCtrl($scope, $http, apiBase, loginService, $mdDatePicker, $locati
     }
     $scope.chooseMap = function(map){  
       $scope.choosenMap = map;
+    }
+    $scope.onChange = function(date){
+      if(date.getTime()<new Date().getTime()) console.log('Before');
     }
     $scope.submitEvent = function(map){
       if(map == null){
@@ -102,7 +104,11 @@ function crtEvtCtrl($scope, $http, apiBase, loginService, $mdDatePicker, $locati
           });
       }
       else{
-          var myEvent = {name: $scope.eventname, map: map._id.$oid, start: (new Date($scope.startDate).getTime()/1000), end: (new Date($scope.endDate).getTime()/1000), owner: $scope.user._id.$oid};
+          var startTime = $scope.startDateHour.split(":");
+          var endTime = $scope.endDateHour.split(":");
+          var aktualStartTime = new Date(new Date($scope.startDate).getTime() + startTime[0] * 360000 + startTime[1] * 60000).getTime();
+          var aktualEndTime = new Date(new Date($scope.endDate).getTime() + endTime[0] * 360000 + endTime[1] * 60000).getTime();
+          var myEvent = {name: $scope.eventname, map: map._id.$oid, start: aktualStartTime, end: aktualEndTime, owner: $scope.user._id.$oid};
         $http({
             url: apiBase + '/event',
             method: 'POST',
@@ -112,7 +118,8 @@ function crtEvtCtrl($scope, $http, apiBase, loginService, $mdDatePicker, $locati
       });
         }
       }
-    $scope.submitFirst = function(name, start, end){
+    $scope.submitFirst = function(name, start, end, startdatehour, enddatehour){
+
       $scope.nextPage();
     }
 }

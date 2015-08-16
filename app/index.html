@@ -5,14 +5,18 @@
 <link rel="stylesheet" href="styles/index.css">
 <link rel="stylesheet" href="styles/user_update.css">
 <link rel="stylesheet" href="styles/event.css">
-<link rel="stylesheet" href="styles/personalTrack.css">
+<link rel="stylesheet" href="styles/track.css">
 
 <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
 <link rel="stylesheet" href="bower_components/angular-material-icons/angular-material-icons.css">
 <link rel="stylesheet" href="bower_components/mdPickers/dist/mdPickers.min.css">
+<link rel="stylesheet" href="bower_components/clockpicker/dist/jquery-clockpicker.min.css">
+<link rel="stylesheet" href="bower_components/jquery-ui/themes/ui-lightness/jquery-ui.css">
+<link rel="stylesheet" href="bower_components/jquery-ui/themes/ui-lightness/theme.css">
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-animate/angular-animate.min.js"></script>
@@ -25,6 +29,7 @@
 <script src="bower_components/mdPickers/dist/mdPickers.min.js"></script>
 <script src="bower_components/moment/min/moment.min.js"></script>
 <script src="bower_components/exifreader/js/ExifReader.js"></script>
+<script src="bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>
 
 
 <script src="scripts/index.js"></script>
@@ -39,18 +44,22 @@
 <script src="scripts/events.js"></script>
 <script src="scripts/event.js"></script>
 <script src="scripts/eventdevice.js"></script>
-<script src="scripts/personalTrack.js"></script>
+<script src="scripts/track_live.js"></script>
+<script src="scripts/track_history.js"></script>
 
-
-
-
+    <style type="text/css">
+      html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByiOVHAmyat7wyOvDZ6CriFNMPM7bK46k">
+    </script>
 </head>
 
   <body layout="row" ng-controller="AppCtrl" flex>
-    <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+<md-sidenav id="sidenav" layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
   <md-toolbar style="position: fixed;" class="md-tall md-hue-2">
     <span flex></span>
-    <div layout="column" class="md-toolbar-tools-bottom inset" ng-show="loggedIn()">
+    <div layout="column" class="md-toolbar-tools-bottom inset">
       <user-avatar></user-avatar>
       <span></span>
       <div>{{user().name}}</div>
@@ -75,7 +84,7 @@
 </md-sidenav>
     <section flex layout='column'>
     <md-toolbar layout="row" style="height: 2em">
-       <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu"><ng-md-icon icon="menu"></ng-md-icon></md-button>
+       <md-button id="sidenavbutton" ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu"><ng-md-icon icon="menu"></ng-md-icon></md-button>
        <span flex></span>
       <div ng-hide="loggedIn()">
        <md-button style="height: 100%;" ng-click="changeLocation('register')">Register</md-button>

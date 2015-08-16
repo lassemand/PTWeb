@@ -25,17 +25,12 @@
       <div style="height: 38px" class="md-button md-raised" ng-file-select ng-model="files">Upload</div>
       <span flex="flex"></span>
       <div>
-      <img ng-show="currentImage != null" ng-src="data:image/png;base64,{{currentImage}}" required class="thumb" />
-      <span ng-hide="currentImage != null">Insert image</span>
+      <span>{{fileName}}</span>
       </div>
         </div>
         <md-input-container ng-class="{'md-input-invalid':userForm.lastName.$error.required && userForm.$submitted}">
           <label>Enter map name</label>
           <input name="lastName" type="text" ng-model="newname" required>
-        </md-input-container>
-        <md-input-container ng-class="{'md-input-invalid':userForm.lastName.$error.required && userForm.$submitted}">
-          <label>Enter map size</label>
-          <input type="number" ng-model="newsize" required>
         </md-input-container>
         <div layout="row">
         <span flex/>
@@ -70,16 +65,18 @@
     
   </table>
 
-  <div layout="row" class="md-table-footer"><span class="md-table-count-info">Rows per page : <a class="fakelink" ng-click="goToPage(0); count=10">10</a>,<a class="fakelink" ng-click="goToPage(0); count=25">25</a>,<a class="fakelink" ng-click="goToPage(0); count=50">50</a>,<a class="fakelink" ng-click="goToPage(0); count=100">100</a>(current is {{count}})</span><span flex="flex"></span>
+  <div layout="row" class="md-table-footer"><span class="md-table-count-info">Rows per page : <a class="fakelink" ng-click="goToPage(0); count=10">10</a>,<a class="fakelink" ng-click="goToPage(0); count=25">25</a>,<a class="fakelink" ng-click="goToPage(0); count=50">50</a>,<a class="fakelink" ng-click="goToPage(0); count=100">100</a>(current is {{count}})</span>
     <span ng-show="nbOfPages() &gt; 1">
+      <div style="margin-left: 5em;">
       <md-button ng-disabled="tablePage==0" ng-click="tablePage=tablePage-1" aria-label="Previous Page" class="md-primary md-hue-2">
-        <img src="images/ic_backarrow.png">
+        <ng-md-icon icon="navigate_before"></ng-md-icon>
     </md-button>
     <a class="fakelink" ng-repeat="i in getNumber(nbOfPages()) track by $index">  
         <md-button ng-click="goToPage($index)" class="md-primary md-hue-2"><span ng-class="{ 'md-table-active-page': tablePage==$index}">{{$index+1}}</span>
       </md-button></a>
       <md-button ng-disabled="tablePage==nbOfPages()-1" ng-click="tablePage=tablePage+1" aria-label="Next Page" class="md-primary md-hue-2">
-        <ng-md-icon icon="add"></ng-md-icon>
+        <ng-md-icon icon="navigate_next"></ng-md-icon>
     </md-button></span></div>
+    <div>
     
 </div> 

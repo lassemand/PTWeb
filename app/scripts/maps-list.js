@@ -116,8 +116,9 @@ function mapCtrl($scope,$location, $http, $filter, $state, $mdDialog, apiBase, l
     }
 
     function mapCreateController($scope, $mdDialog, $http, apiBase){
+      $scope.fileName = "";
         $scope.pushMap = function () {
-          var mapToUpload = {name: $scope.newname, image: $scope.currentImage, size: $scope.newsize};
+          var mapToUpload = {name: $scope.newname, image: $scope.currentImage};
         // Simple POST request example (passing data) :
         $http({
             url: apiBase + '/map',
@@ -133,22 +134,24 @@ function mapCtrl($scope,$location, $http, $filter, $state, $mdDialog, apiBase, l
         $scope.upload = function(files){
           if(files && files.length > 0){
                     var myFile = files[0];
-                    var allowed = ["jpeg", "png", "jpg"];
+                    console.log(myFile);
+                    var allowed = ["kmz", "jpg"];
                     var found = false;
-                    var fileExtension = "jpg"
                     allowed.forEach(function(extension) {
                        if (myFile.type.match('image/'+extension)) {
                             found = true;
-                            fileExtension = extension;
                           }
                         });
-                    var found = true;
+                    found = true;
                     if(found){
                       var reader = new FileReader();
                       reader.onload = function(readerEvt) {
                       var binaryString = readerEvt.target.result;
+                      
                       $scope.imageActive = true;
                       $scope.currentImage = btoa(binaryString);
+                      console.log($scope.currentImage);
+                      $scope.fileName = myFile.name;
               };
               reader.readAsBinaryString(myFile);
               }

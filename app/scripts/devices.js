@@ -19,11 +19,14 @@ function createCtrl($scope, apiBase, $http, loginService, $mdDialog){
           method: 'POST',
           data: device
       }).success(function(data, status, headers, config) {
-        device._id = {$oid: data};
+        device._id = {$oid: data._id};
         $mdDialog.hide(device);
+        if($scope.user.defaultdevice == null){
+          $scope.user.defaultdevice = data._id;
+          loginService.updateUser($scope.user);
+        }
       });
   }
-
 }
 
 function deviceCtrl($scope, apiBase, $http, loginService, $mdDialog){

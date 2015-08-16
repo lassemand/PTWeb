@@ -1,0 +1,40 @@
+<div id="map-canvas"></div>
+		<div class="overview" layout="column">
+			<div class="overviewheader" layout="row">
+				<p>Choose runners</p>
+				<span flex></span>
+				<ng-md-icon ng-show="showOverview" ng-click="showOverview = !showOverview" icon="keyboard_arrow_down"></ng-md-icon>
+				<ng-md-icon ng-hide="showOverview" ng-click="showOverview = !showOverview" icon="keyboard_arrow_up"></ng-md-icon>
+			</div>
+			<div class="overviewbody" layout="row" ng-show="showOverview">
+				<div layout="column" ng-repeat="runner in marker">
+					<div layout="row">
+						<md-checkbox ng-change="changeVisibilityOfMarker(runner.eventdevice.device)" ng-model="runner.marker.visible"/>
+						<span >{{runner.eventdevice.runner.name}}</span>
+						<span flex></span>
+						<ng-md-icon style="color:{{runner.color}};" icon="place"></ng-md-icon>
+					</div>
+					<md-divider/>
+				</div>
+			</div> 
+      	</div>
+      	<div class="playline" layout="row">
+      		<div layout="row">
+      			<button class="md-raised playbutton" ng-click="decrementSpeed()"><ng-md-icon class="playimage" icon="fast_rewind" size="20"></ng-md-icon></button>
+      			<button class="md-raised playbutton" ng-hide="playing" ng-click="play()"><ng-md-icon size="20" class="playimage" icon="play_arrow" ></ng-md-icon></button>
+      			 <button ng-show="playing" class="md-raised playbutton" ng-click="pause()"><ng-md-icon size="20" class="playimage" icon="pause"></ng-md-icon></button>
+      			<button class="md-raised playbutton" ng-click="incrementSpeed()"><ng-md-icon icon="fast_forward" size="20"></ng-md-icon></button>
+      		</div>
+      		<div class="playlineline">
+      			<div class="playlinetime" ></div>
+      		</div>
+      		 <div style="width: 7em;" layout="row">
+      			<ng-md-icon style="margin-left: 5px; margin-right: 5px; margin-top: 0.25em;" icon="alarm"></ng-md-icon>
+      			<p flex style="margin-top: 0.5em; margin-bottom: 0.5em;" ng-if="event != null">{{convertPlayingToString()}}</p>
+      		</div>
+      	</div>
+      <script type="text/ng-template" id="trackHistorySpeedDialog">
+          <md-dialog layout="column"> 
+           <h1 style="text-align: center;">{{choosenSpeed}} x</h1>
+          </md-dialog>
+    </script>
