@@ -1,12 +1,12 @@
-<div ng-if="!initialLoaded">
-	<p>Loading</p>
-</div>
-<div ng-if="initialLoaded" ng-cloak>
+<div ng-cloak>
 	<p ng-if="type == 0">Add persons to the event</p>
 	<p ng-if="type == 1">Add all persons on a team to the event</p>
-	<md-input-container flex="flex">
+<md-input-container flex="flex">
 	<label>{{searchHint}}</label><input id="searchInput" type="text" ng-model="searchText"/>
 </md-input-container>
+	<md-select ng-model="myCourse" ng-init="myCourse = event.courses[0];">
+  	<md-option ng-value="course" ng-repeat="course in event.courses">{{ course.name}}</md-option>
+	</md-select>
 <table style="margin-left:1%;" md-colresize="md-colresize" class="md-table">
 	<thead>
 		<tr class="md-table-headers-row">
@@ -21,11 +21,12 @@
 
 		<tr ng-repeat="c in content | filter:searchText | startFrom:tablePage*count:optionvalue:count | limitTo:count" class="md-table-content-row" >
 			<td class="md-table-content" >{{c.name}}</td>
-			<td ng-if="checkForContained(c) == 0" type="button" class="md-table-content" ng-click="defaultDeviceMissing()"><md-button><ng-md-icon icon="info"/></md-button></td>
-			<td ng-if="checkForContained(c) == 1" type="button" class="md-table-content" ng-click="addEvent(c.defaultdevice, c)"><md-button><ng-md-icon icon="add"/></md-button></td>
-			<td ng-if="checkForContained(c) == 2" type="button" class="md-table-content" ng-click="removeEvent(c._id.$oid, $index)"><md-button ><ng-md-icon icon="remove"/></md-button></td>
-			<td ng-if="checkForContained(c) == 3" type="button" class="md-table-content" ng-click="defaultDeviceObtained()"><md-button ><ng-md-icon icon="info"/></md-button></td>
-			<td ng-show="checkForContained(c) ==  1 || checkForContained(c) == 3" class="md-table-content"><md-select ng-model="someModel">
+			<td ng-if="c.available == 4" type="button" class="md-table-content" ng-click="defaultDeviceMissing()"><md-button><ng-md-icon icon="info"/></md-button></td>
+			<td ng-if="c.available == 1" type="button" class="md-table-content" ng-click="addEvent(c.defaultdevice, c)"><md-button><ng-md-icon icon="add"/></md-button></td>
+			<td ng-if="c.available == 2" type="button" class="md-table-content" ng-click="removeEvent(c, $index)"><md-button ><ng-md-icon icon="remove"/></md-button></td>
+			<td ng-if="c.available == 3" type="button" class="md-table-content" ng-click="defaultDeviceObtained()"><md-button ><ng-md-icon icon="info"/></md-button></td>
+			<td ng-show="c.available ==  1" class="md-table-content">
+				<md-select ng-model="someModel">
   				<md-select-label>Choose from all devices:</md-select-label>
   				<md-option ng-click="addEvent(opt._id.$oid, c)" ng-value="opt" ng-repeat="opt in individualDevices[c._id.$oid]">{{ opt.name}}</md-option>
 				</md-select>

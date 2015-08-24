@@ -5,37 +5,46 @@
 			<span flex></span>
 			<p>{{event.name}}</p>
 		</div>
-		<md-divider/>
+		<md-divider></md-divider>
 		<div layout="row">
 			<p>Start:</p>
 			<span flex></span>
 			<p>{{convertLong(event.start)}}</p>
 		</div>
-		<md-divider/>
+		<md-divider></md-divider>
 		<div layout="row">
 			<p>End:</p>
 			<span flex></span>
 			<p>{{convertLong(event.end)}}</p>
 		</div>
-		<md-divider/>
+		<md-divider></md-divider>
 		<div layout="row">
 			<p>Owner:</p>
 			<span flex></span>
 			<a href ng-click="changeToRunner(event.owner)"><p>{{event.owner.name}}</p></a>
 		</div>
-		<md-divider/>
+		<md-divider></md-divider>
 		<div layout="row">
 			<p>Map:</p>
 			<span flex></span>
 			<a href ng-click="changeToMap(event.map)"><p>{{event.map.name}}</p></a>
 		</div>
-		<md-divider/>
+		<md-divider></md-divider>
+		<div layout="row">
+			<p>Courses:</p>
+			<span flex></span>
+				<md-select ng-model="optionvalue">
+    				<md-option flex ng-value="course" ng-repeat="course in event.courses">{{course.name}}</md-option>
+    			</md-select>
+    		<p ng-repeat="eventdevice in course.eventdevices">{{eventdevice.name}}</p>
+		</div>
+		<md-divider></md-divider>
 		<div layout="row">
 			<p>Modified At:</p>
 			<span flex></span>
 			<p>{{convertLong(event.modified)}}</p>
 		</div>
-		<md-divider/>
+		<md-divider></md-divider>
 		<div layout="row">
 			<span flex></span>
 			<md-button ng-click="changeToRunner()" ng-if="eventTimeComparedToAktuelTime() == 0">Add runner</md-button>
@@ -46,6 +55,10 @@
 		</div>
 		<div layout="row">
 			<span flex></span>
+			<md-button ng-click="addCourse()" ng-if="eventTimeComparedToAktuelTime() == 0">Add course</md-button>
+		</div>
+		<div layout="row">
+			<span flex></span>
 			<md-button ng-click="changeToMap()" ng-if="eventTimeComparedToAktuelTime() == 1">Live Tracking</md-button>
 		</div>
 		<div layout="row">
@@ -53,5 +66,18 @@
 			<md-button ng-click="changeToHistory()" ng-if="eventTimeComparedToAktuelTime() == 2">Track event</md-button>
 		</div>
 	</div>
-
 </div>
+<script type="text/ng-template" id="createCourseDialog">
+          <md-dialog layout="column"> 
+           <h2 style="text-align: center;">Create Course</h2>
+          <div class="md-actions">
+          <form ng-submit="submit(_name)">
+          <md-input-container flex="flex">
+            <label >Name</label><input type="text" ng-model="_name" required/>
+          </md-input-container>
+            <md-button type="button" ng-click="cancel()">Cancel</md-button>
+            <md-button layout-align="start right" class="md-raised md-primary">Create</md-button>
+          </form>
+          </div>
+          </md-dialog>
+    </script>

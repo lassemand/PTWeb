@@ -15,8 +15,21 @@ div.overview{
 	z-index:2;
 	width: 11em;
 	background-color: white;
-	border: 2px solid darkgrey;
+	border-radius: 1em;
+  box-shadow: 10px 10px 5px #888888;
 }
+
+.courseselect{
+    position: fixed;
+  z-index:2;
+  bottom: 3em;
+  left: 1em;
+  width: 11em;
+  background-color: white;
+  border-radius: 1em;
+  box-shadow: 10px 10px 5px #888888;
+}
+
 .overviewheader{
 	border-bottom: 2px solid darkgrey;
 }
@@ -33,18 +46,30 @@ div.overview{
   background-color: #DBDBDB;
 }
 .playlineline {
-  height: 50%;
+  height: 16px;
   width: 80%;
   background-color: #AFAFAF;
   border-radius: 2px;
   margin: 0.5em;
-
+  max-width:70%;
 }
 .playlinetime {
+  position: relative;
+  margin-left: -8px;
   background-color: white;
   border-radius: 50%;
   width: 1em;
   height: 1em; 
+  z-index: 5;
+}
+
+.playlineoverlay {
+  background-color: #868686;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 1px;
+  border-radius: 2px;
+  width: 8px;
 }
 
 .playimage {

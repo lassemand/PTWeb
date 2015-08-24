@@ -4,8 +4,9 @@ angular.module('map', ['ngMaterial','StarterApp']);
 angular.module('mapsList', ['ngAnimate', 'ngAria', 'ngMaterial', 'angularFileUpload', 'StarterApp', 'ngMdIcons']);
 angular.module('register', ['ngMaterial', 'StarterApp']);
 
-var objectApiGroundBase = 'http://46.101.134.212:8080/PersonalTrack';
+var objectApiGroundBase = 'http://localhost:8080/PersonalTrack';
 var app = angular.module('StarterApp', ['ngMaterial', 'mapsList', 'ui.router', 'map', 'ngMessages', 'ngMdIcons', 'mdPickers']);
+var eventId = null;
 
 app.run(function ($rootScope, $state, loginService) {
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
