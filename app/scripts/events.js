@@ -106,8 +106,8 @@ function crtEvtCtrl($scope, $http, apiBase, loginService, $mdDatePicker, $locati
       else{
           var startTime = $scope.startDateHour.split(":");
           var endTime = $scope.endDateHour.split(":");
-          var aktualStartTime = new Date(new Date($scope.startDate).getTime() + startTime[0] * 360000 + startTime[1] * 60000).getTime();
-          var aktualEndTime = new Date(new Date($scope.endDate).getTime() + endTime[0] * 360000 + endTime[1] * 60000).getTime();
+          var aktualStartTime = new Date(new Date($scope.startDate).getTime() + startTime[0] * 3600000 + startTime[1] * 60000).getTime();
+          var aktualEndTime = new Date(new Date($scope.endDate).getTime() + endTime[0] * 3600000 + endTime[1] * 60000).getTime();
           var myEvent = {name: $scope.eventname, map: map._id.$oid, start: aktualStartTime, end: aktualEndTime, owner: $scope.user._id.$oid};
         $http({
             url: apiBase + '/event',

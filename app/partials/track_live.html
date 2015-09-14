@@ -1,4 +1,9 @@
-<div id="map-canvas2"></div>
+<div id="map-canvas2" style="height: 57em;"></div>
+    <div class="courseselect">
+    <md-select ng-model="choosenCourse" flex>
+      <md-option flex ng-value="course" ng-repeat="course in event.courses">{{course.name}}</md-option>
+    </md-select>
+    </div>
 		<div class="overview" layout="column">
 			<div class="overviewheader" layout="row">
 				<p>Choose runners</p>
@@ -7,14 +12,13 @@
 				<ng-md-icon ng-hide="showOverview" ng-click="showOverview = !showOverview" icon="keyboard_arrow_up"></ng-md-icon>
 			</div>
 			<div class="overviewbody" layout="row" ng-show="showOverview">
-				<div layout="column" ng-repeat="runner in marker">
+				<div layout="column" ng-repeat="eventdevice in choosenCourse.eventdevices">
 					<div layout="row">
-						<md-checkbox ng-change="changeVisibilityOfMarker(runner.eventdevice.device)" ng-model="runner.marker.visible"/>
-						<span >{{runner.eventdevice.runner.name}}</span>
+						<md-checkbox ng-change="changeVisibilityOfMarker(eventdevice)" ng-model="eventdevice.visible"/>
+						<span >{{eventdevice.runner.name}}</span>
 						<span flex></span>
-						<ng-md-icon style="color:{{runner.color}};" icon="place"></ng-md-icon>
+						<ng-md-icon style="color:{{eventdevice.color}};" icon="place"></ng-md-icon>
 					</div>
-					<md-divider/>
 				</div>
 			</div> 
       	</div>

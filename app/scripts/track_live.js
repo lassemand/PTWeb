@@ -1,12 +1,19 @@
 'use strict'
 
-
-
 var app = angular.module('StarterApp');
 
 app.controller("LiveTrackController", LiveTrackController);
+app.controller("HistoryTrackController", HistoryTrackController);
+app.controller("HistoryTrackSpeedDialogController", HistoryTrackSpeedDialogController);
 
   var numDeltas = 100;
+  var map;
+  var savedMarkers = {};
+  var myCourses = {};
+  var sidenav = null;
+  var sidenavbutton = null;
+  var savedSideNavDisplay = null;
+  var savedSideNavButtonDisplay = null;
 
     function getRandomColor() {
     var letters = '0123456789ABCDEF'.split('');
@@ -17,6 +24,39 @@ app.controller("LiveTrackController", LiveTrackController);
     return color;
     }
 
+  function insertIndexOnEventDevice(eventdevice, currentTime){
+    //Should be binary
+    var a = 0;
+    while(a<eventdevice.location.locations.length && currentTime > eventdevice.location.locations[a].modified) {
+      a++;
+    }
+    eventdevice.index = a - 1;
+   }
+
+   function courseChoosen(course, currentTime){
+    removeMarkers();
+       if(course != null){
+          var eventdevices = myCourses[course._id];
+          var first = true;
+          for (var property in eventdevices) {
+            var value = eventdevices[property];
+            value.visible = true;
+            if(value.location != null && value.location.locations.length > 0){
+              insertIndexOnEventDevice(value, currentTime);
+              if(value.index != -1){
+              var position = value.location.locations[value.index];
+              var myMarker = insertMarker(position.latitude, position.longitude, value.runner.name, map, value.visible, value.color);
+                if(first){
+                  map.panTo(myMarker.getPosition());
+                  first = false;
+                }
+              }
+              savedMarkers[value._id] = myMarker;
+            }
+          }
+       }
+   }
+
     function preInitiate(name){
               var mapOptions = {
           center: { lat: -34.397, lng: 150.644},
@@ -26,6 +66,16 @@ app.controller("LiveTrackController", LiveTrackController);
             mapOptions);
         return map;
     }
+
+      function removeMarkers(){
+          for (var property in savedMarkers) {
+            var value = savedMarkers[property];
+            if(value != null){
+              value.setMap(null);
+            }
+          }
+          savedMarkers = {};
+  }
 
     function initiateGoogleMaps(url, mapId, map){
         var kmlUrl = url + '/' + mapId + '/doc.kml';
@@ -38,52 +88,73 @@ app.controller("LiveTrackController", LiveTrackController);
         return new google.maps.KmlLayer(kmlUrl, kmlOptions);
     }
 
-    function insertMarker(latitude, longitude, name, map){
+    function insertMarker(latitude, longitude, name, map, visible, pinColor){
         var myLatLng = {lat: latitude, lng: longitude};
-    var pinColor = getRandomColor();
     var pinImage = {
       path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
        fillColor: pinColor,
        fillOpacity: 0.9,
     scale: 1,
-    strokeColor: pinColor
+    strokeColor: pinColor,
+    size: new google.maps.Size(24, 24),
+    origin: new google.maps.Point(0, 0),
+    anchor: new google.maps.Point(12, 24)
     };
 
         var marker = new google.maps.Marker({
           position: myLatLng,
           map: map,
-          title: name
+          title: name,
+          icon:pinImage
         });
+        if(visible){
         marker.setMap(map);
+        }
+        else
+        marker.setMap(null);
         return marker;
     }
 
+      function retrieveSideNavInf(){
+    sidenav = document.getElementById('sidenav');
+    sidenavbutton = document.getElementById('sidenavbutton');
+    sidenav.style.display = 'none';
+    sidenavbutton.style.display = 'none';
+    savedSideNavDisplay = sidenav.style.display;
+    savedSideNavButtonDisplay = sidenavbutton.style.display;
+}
+
 function LiveTrackController($scope, $http, $window, apiBase, $stateParams, apiMapsBase, $interval){
+retrieveSideNavInf();
 var stop;
-$scope.showOverview = true;
-$scope.marker = {};
+var currentPositions = {};
+        var sidenav = document.getElementById('sidenav');
+        var sidenavbutton = document.getElementById('sidenavbutton');
+        sidenav.style.display = 'none';
+        sidenavbutton.style.display = 'none';
+        $scope.showOverview = true;
+        var savedEventdevices = [];
+        map = preInitiate('map-canvas2');
+        var kmlLayer = initiateGoogleMaps(apiMapsBase, $stateParams.mapId, map);
 
-    var map = preInitiate('map-canvas2');
-    var kmlLayer = initiateGoogleMaps(apiMapsBase, $stateParams.mapId);
-
-    function updateMarker(locations, device){
+    function updateMarker(locations, eventdevice){
       if($scope.marker[device] != null){
         var deviceLocation = locations[locations.length-1];
-        var marker = $scope.marker[device];
+        var marker = savedMarkers[eventdevice._id];
         var result = [deviceLocation.latitude, deviceLocation.longitude];
         transition(result, marker);
       }
     }
 
-    function transition(result, marker){
+    function transition(newPosition, marker, oldPositions){
       var i = 0;
-      var deltaLat = (result[0] - marker.position[0])/numDeltas;
-      var deltaLng = (result[1] - marker.position[1])/numDeltas;
+      var deltaLat = (newPosition.latitude - oldPositions[0])/numDeltas;
+      var deltaLng = (newPosition.longitude - oldPositions[1])/numDeltas;
       var transitionStop = $interval(function(){
-        marker.position[0] += deltaLat;
-        marker.position[1] += deltaLng;
-        var latlng = new google.maps.LatLng(marker.position[0], marker.position[1]);
-        marker.marker.setPosition(latlng);
+        oldPositions[0] += deltaLat;
+        oldPositions[1] += deltaLng;
+        var latlng = new google.maps.LatLng(oldPositions[0], oldPositions[1]);
+        marker.setPosition(latlng);
         if(i != numDeltas)
         i++;
         else
@@ -92,44 +163,65 @@ $scope.marker = {};
     }
 
    $http({
-    url: apiBase + '/event',
+    url: apiBase + '/event/eventWithLocations',
     method: 'GET',
     params: {id: $stateParams.eventId}
    }).
    success(function(data, status, headers, config) {
-    for (var property in data.eventdevices) {
-      var value = data.eventdevices[property];
-      var eventDeviceObject = insertMarker(value, map);
-      $scope.marker[value.device] = eventDeviceObject;
-    }
-    $scope.eventdevices = data.eventdevices;
-  });
-
-    $scope.changeVisibilityOfMarker = function(device){
-      var aktualMarker = $scope.marker[device];
-      var visible = aktualMarker.marker.visible;
-      if(visible){
-        aktualMarker.marker.setMap(map);
+      for(var a = 0; a<data.courses.length; a++){
+        var course = data.courses[a];
+        var myEventDevices = {};
+        for(var b = 0; b<course.eventdevices.length; b++){
+          var eventdevice = course.eventdevices[b];
+          eventdevice.color = getRandomColor();
+          savedEventdevices.push(eventdevice._id);
+          myEventDevices[eventdevice._id] = eventdevice;
+        }
+        myCourses[course._id] = myEventDevices;
       }
-      else aktualMarker.marker.setMap(null);
+      $scope.event = data;
+  });
+    $scope.changeVisibilityOfMarker = function(eventdevice){
+      var aktualMarker = savedMarkers[eventdevice._id];
+      if(eventdevice.visible){
+        aktualMarker.setMap(map);
+      }
+      else aktualMarker.setMap(null);
+    }
+
+    function floatCompare(float1, float2){
+      return (Math.round(parseFloat(float1)*1000000)/1000000) === (Math.round(parseFloat(float2)*1000000)/1000000)
     }
 
    $scope.startFetch = function(){
     if(angular.isDefined(stop)) return;
     stop = $interval(function(){
          $http({
-    url: apiBase + '/eventdevice/eventUpdates',
+    url: apiBase + '/devicelocation/eventDevicesFromArrayOfDeviceLocations',
     method: 'GET',
-    params: {id: $stateParams.eventId, time: $scope.lastFetchedTime}
+    params: {eventdevices: JSON.stringify(savedEventdevices)}
    }).
    success(function(data, status, headers, config) {
-    for (var property in data.eventdevices) {
-      if (data.eventdevices.hasOwnProperty(property)) {
-        var value = data.eventdevices[property];
-        var currentArray = $scope.eventdevices[property];
-        if(currentArray.locations.length < value.locations.length){
-        $scope.eventdevices[property].locations = value.locations;
-        updateMarker(value.locations, value.device);
+    currentPositions = data;
+    if($scope.choosenCourse != null){
+      var course = myCourses[$scope.choosenCourse._id];
+      
+      for(var property in course){
+        var eventdevice = course[property];
+        var marker = savedMarkers[eventdevice._id];
+        var positions = currentPositions[eventdevice._id];
+        if(marker == null && positions.locations.length > 0){
+          var location = positions.locations[positions.locations.length - 1];
+          marker = insertMarker(location.latitude, location.longitude, eventdevice.runner.name, map, eventdevice.visible, eventdevice.color);
+          savedMarkers[eventdevice._id] = marker;
+        }
+        else if(marker != null && positions.locations.length > 0){
+          var currentPosition = marker.getPosition();
+          var lastPosition = positions.locations[positions.locations.length - 1];
+          if(!floatCompare(lastPosition.latitude, currentPosition.G) || !floatCompare(lastPosition.longitude, currentPosition.K)){
+            var currentPositionArray = [currentPosition.G, currentPosition.K];
+            transition(lastPosition, marker, currentPositionArray);
+          }
         }
       }
     }
@@ -145,25 +237,24 @@ $scope.marker = {};
     }
    };
 
+     $scope.$watch('choosenCourse', function (course) {
+    courseChoosen(course, new Date().getTime());
+  });
+
    $scope.startFetch();
    $scope.$on('$destroy', function(){
     $scope.stopFetch();
+    $rootScope.hideDrawer = false;
+    sidenav.style.display = savedSideNavDisplay;
+    sidenavbutton.style.display = savedSideNavButtonDisplay;
    });
 }
 
-app.controller("HistoryTrackController", HistoryTrackController);
-app.controller("HistoryTrackSpeedDialogController", HistoryTrackSpeedDialogController);
-
-
 function HistoryTrackController($scope, $http, $window, apiBase, $stateParams, apiMapsBase, $mdDialog, $interval, $rootScope){
-        var sidenav = document.getElementById('sidenav');
-        var sidenavbutton = document.getElementById('sidenavbutton');
+
         var timelineoverlay = document.getElementById("playlineoverlay");  
-        var savedSideNavDisplay = sidenav.style.display;
-        var savedSideNavButtonDisplay = sidenavbutton.style.display;
-        sidenav.style.display = 'none';
-        sidenavbutton.style.display = 'none';
-        var timeline = document.getElementsByClassName("playlineline")[0]; 
+        var timeline = document.getElementsByClassName("playlineline")[0];
+        retrieveSideNavInf(); 
         var playlinetime = $('#playlinetime');
         var canvasObject = $('#body');
         var constantAddition = 60000;
@@ -177,23 +268,27 @@ function HistoryTrackController($scope, $http, $window, apiBase, $stateParams, a
         var timeLineMargin = 1;
         var buttonSize = 16;
         $scope.choosenSpeed = 5;
-        var map = preInitiate('map-canvas');
+        map = preInitiate('map-canvas');
         var kmlLayer = initiateGoogleMaps(apiMapsBase, $stateParams.mapId, map);
         var myCourses = {};
-        var savedMarkers = {};
     function transition(from, to, marker){
         var latlng = new google.maps.LatLng(to.latitude, to.longitude);
         marker.setPosition(latlng);
 
     }
-
+    $scope.changeVisibilityOfMarker = function(eventdevice){
+      var aktualMarker = savedMarkers[eventdevice._id];
+      if(eventdevice.visible){
+        aktualMarker.setMap(map);
+      }
+      else aktualMarker.setMap(null);
+    }
 $http({
     url: apiBase + '/event/eventWithLocations',
     method: 'GET',
     params: {id: $stateParams.eventId}
    }).
    success(function(data, status, headers, config) {
-    var allEventDevices = [];
       aktualLength = (data.end - data.start) + constantAddition;
       definedStart = data.start - constantAddition;
       $scope.currentTime = data.start - constantAddition;
@@ -203,8 +298,8 @@ $http({
         var myEventDevices = {};
         for(var b = 0; b<course.eventdevices.length; b++){
           var eventdevice = course.eventdevices[b];
+          eventdevice.color = getRandomColor();
           myEventDevices[eventdevice._id] = eventdevice;
-          allEventDevices.push(eventdevice._id);
         }
         myCourses[course._id] = myEventDevices;
       }
@@ -235,18 +330,6 @@ $http({
       });
    } 
 
-   function insertIndexOnEventDevice(eventdevice){
-    //Should be binary
-    var a = 0;
-    console.log($scope.currentTime);
-    console.log(eventdevice.location.locations);
-    while($scope.currentTime > eventdevice.location.locations[a].modified && a<eventdevice.location.locations.length) {
-      console.log('Are we here');
-      a++;
-    }
-    eventdevice.index = a - 1;
-   }
-
    var startPosition = null;
    var startWidth = null;
    var isPlaying = false;
@@ -268,6 +351,8 @@ $http({
     }
       timelineoverlay.style.width = currentWidth;
       $scope.currentTime = ($scope.event.start - constantAddition) + (percent * aktualLength);
+      $scope.retrieveCurrentTimeLine();
+      updatePositions();
    }
 
    function mouseUp(e){
@@ -293,19 +378,39 @@ $http({
         while(eventdevice.location.locations[tempIndex] != null && eventdevice.location.locations[tempIndex].modified > $scope.currentTime) tempIndex--;
       eventdevice.index = tempIndex;
    }
+
+   function updatePositions(){
+        if($scope.choosenCourse != null){
+          var selectedCourse = myCourses[$scope.choosenCourse._id];
+          for (var property in selectedCourse) {
+            var eventDevice = selectedCourse[property];
+            var currentIndex = eventDevice.index;
+            updateIndexOnEventDevice(eventDevice);
+            var newIndex = eventDevice.index;
+            if(currentIndex != newIndex){
+              var marker = savedMarkers[eventDevice._id];
+              if(marker == null){
+                var currentPositon = eventDevice.location.locations[eventDevice.index];
+                marker = insertMarker(currentPositon.latitude, currentPositon.longitude, eventDevice.runner.name, map, eventDevice.visible, eventDevice.color);
+                savedMarkers[eventDevice._id] = marker;
+              }
+              else{
+                var from = marker.getPosition();
+                var to = eventDevice.location.locations[eventDevice.index];
+                transition(from, to, marker);
+               }
+            }
+         }
+      }
+   }
+
    $scope.play = function(){
     var fetchFrequence = 100;
     $scope.playing = true;
          stop = $interval(function(){
           $scope.currentTime += fetchFrequence * $scope.choosenSpeed;
           $scope.retrieveCurrentTimeLine();
-          if($scope.choosenCourse != null){
-          var selectedCourse = myCourses[$scope.choosenCourse._id];
-          for (var property in selectedCourse) {
-            var eventDevice = selectedCourse[property];
-            updateIndexOnEventDevice(eventDevice);
-          }
-        }
+          updatePositions();
         }, fetchFrequence);
    }
    $scope.pause = function(){
@@ -328,39 +433,8 @@ $http({
     $scope.retrieveCurrentTimeLine();
   }
 
-  function removeMarkers(){
-          for (var property in savedMarkers) {
-            var value = savedMarkers[property];
-            console.log(value);
-            if(value != null){
-              value.setMap(null);
-            }
-          }
-          savedMarkers = {};
-  }
-
-  $scope.$watch('choosenCourse', function () {
-      removeMarkers();
-       if($scope.choosenCourse != null){
-          var eventdevices = myCourses[$scope.choosenCourse._id];
-          var first = true;
-          for (var property in eventdevices) {
-            var value = eventdevices[property];
-            if(value.location != null && value.location.locations.length > 0){
-              insertIndexOnEventDevice(value);
-              console.log(value.index);
-              if(value.index != -1){
-              var position = value.location.locations[value.index];
-              var myMarker = insertMarker(position.latitude, position.longitude, value.runner.name, map);
-            if(first){
-              map.panTo(myMarker.getPosition());
-              first = false;
-            }
-              savedMarkers[value._id] = myMarker;
-              }
-            }
-          }
-       }
+  $scope.$watch('choosenCourse', function (course) {
+      courseChoosen(course, $scope.currentTime);
   });
 
    $scope.convertPlayingToString = function(){
@@ -410,5 +484,3 @@ function HistoryTrackSpeedDialogController($scope, $mdDialog, $interval, speed){
       return 1-(a/50);
     }
 }
-
-

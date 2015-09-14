@@ -4,7 +4,7 @@ angular.module('map', ['ngMaterial','StarterApp']);
 angular.module('mapsList', ['ngAnimate', 'ngAria', 'ngMaterial', 'angularFileUpload', 'StarterApp', 'ngMdIcons']);
 angular.module('register', ['ngMaterial', 'StarterApp']);
 
-var objectApiGroundBase = 'http://localhost:8080/PersonalTrack';
+var objectApiGroundBase = 'http://46.101.134.212:8080/PersonalTrack';
 var app = angular.module('StarterApp', ['ngMaterial', 'mapsList', 'ui.router', 'map', 'ngMessages', 'ngMdIcons', 'mdPickers']);
 var eventId = null;
 
@@ -31,11 +31,9 @@ app.controller('LoginModalCtrl', function ($scope, $rootScope, $mdDialog, $http,
           loginService.setupToken(data.token, data.username);
           loginService.updateUser(data);
           $mdDialog.hide();
-          console.log('Succes' + status);
       }).
       error(function(data, status, headers, config) {
          $scope.falseLogin = true;
-         console.log('error' + status);
       });
     };
 

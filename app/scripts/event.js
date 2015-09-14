@@ -13,7 +13,6 @@ function test($scope, $timeout, $http, apiBase, loginService, $stateParams, date
   params: {id: $stateParams.eventId}
 }).
  success(function(data, status, headers, config) {
-  console.log(data);
   $scope.event = data;
   $scope.eventTimeComparedToAktuelTime = function(){
     var currentDate = new Date().getTime();
